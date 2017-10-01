@@ -1,17 +1,17 @@
 package models
 
-import java.util.Date
-
+import utils.JsonFormatUtils._
 import constants.GeneralConstants
+import org.joda.time.DateTime
 import play.api.libs.json.{JsObject, Json, OFormat}
 
 case class User(
-  id: String,
-  createdAt: Date,
-  email: String,
-  saltedPasswordHash: String,
-  firstName: String,
-  lastName: Option[String]
+     id: String,
+     createdAt: DateTime,
+     email: String,
+     saltedPasswordHash: String,
+     firstName: String,
+     lastName: Option[String]
 ) {
   user =>
 

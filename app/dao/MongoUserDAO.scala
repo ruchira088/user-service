@@ -8,7 +8,7 @@ import play.modules.reactivemongo.ReactiveMongoApi
 import play.modules.reactivemongo.json._
 import reactivemongo.play.json.collection.JSONCollection
 import services.HashingService
-import types.FutureO
+import utils.FutureO
 
 import scala.concurrent.{ExecutionContext, Future}
 

@@ -1,12 +1,10 @@
 package dao
 
-import java.util.Date
-
 import controllers.requests.bodies.CreateUser
 import models.User
+import org.joda.time.DateTime
 import services.HashingService
-import types.FutureO
-import utils.GeneralUtils
+import utils.{FutureO, GeneralUtils}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -22,5 +20,5 @@ trait UserDAO
     saltedPasswordHash <- hashingService.hash(createUser.password)
     CreateUser(email, _, firstName, lastName) = createUser
     userId = GeneralUtils.randomUUID()
-  } yield User(userId, new Date(), email, saltedPasswordHash, firstName, lastName)
+  } yield User(userId, DateTime.now(), email, saltedPasswordHash, firstName, lastName)
 }

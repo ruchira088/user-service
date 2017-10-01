@@ -1,4 +1,4 @@
-package types
+package utils
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
