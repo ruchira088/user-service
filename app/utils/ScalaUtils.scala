@@ -16,4 +16,9 @@ object ScalaUtils
     case Some(value) => Success(value)
     case None => Failure(EmptyOptionException)
   }
+
+  def toOption[A](value: A): Option[A] = value match {
+    case null => None
+    case _ => Some(value)
+  }
 }

@@ -15,6 +15,9 @@ libraryDependencies += "org.reactivemongo" % "play2-reactivemongo_2.12" % "0.12.
 // https://mvnrepository.com/artifact/org.mindrot/jbcrypt
 libraryDependencies += "org.mindrot" % "jbcrypt" % "0.4"
 
+// https://mvnrepository.com/artifact/com.github.etaty/rediscala_2.12
+libraryDependencies += "com.github.etaty" % "rediscala_2.12" % "1.8.0"
+
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % Test
 
 // Adds additional packages into Twirl
