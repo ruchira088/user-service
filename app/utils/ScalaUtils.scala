@@ -3,6 +3,7 @@ package utils
 import exceptions.EmptyOptionException
 import play.api.libs.json.{JsError, JsResult, JsSuccess}
 
+import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
 
 object ScalaUtils
@@ -21,4 +22,7 @@ object ScalaUtils
     case null => None
     case _ => Some(value)
   }
+
+  def predicate(boolean: Boolean, exception: => Throwable): Future[Unit] =
+    if (boolean) Future.successful(()) else Future.failed(exception)
 }

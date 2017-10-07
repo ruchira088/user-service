@@ -1,10 +1,14 @@
 package utils
 
+import exceptions.{EmptyOptionException, FailedPredicateException}
+
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 
 case class FutureO[A](future: Future[Option[A]])
 {
+  futureO =>
+
   def flatMap[B](f: A => FutureO[B])(implicit executionContext: ExecutionContext): FutureO[B] =
     FutureO {
       future.flatMap {
@@ -14,6 +18,14 @@ case class FutureO[A](future: Future[Option[A]])
     }
 
   def map[B](f: A => B)(implicit executionContext: ExecutionContext): FutureO[B] = FutureO { future.map(_ map f) }
+
+  def withFilter(predicate: A => Boolean)(implicit executionContext: ExecutionContext): FutureO[A] =
+    flatMap(value =>
+      if (predicate(value))
+        futureO
+      else
+        FutureO(Future.failed(FailedPredicateException))
+    )
 }
 
 object FutureO
