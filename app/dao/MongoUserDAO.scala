@@ -32,6 +32,11 @@ class MongoUserDAO @Inject()(
       userOption <- collection.find(Json.obj("email" -> email)).cursor[User]().headOption
     } yield userOption
   }
+
+  def exists(email: String) = fetchByEmail(email).future.map {
+    case None => false
+    case _ => true
+  }
 }
 
 object MongoUserDAO

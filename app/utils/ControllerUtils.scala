@@ -1,7 +1,7 @@
 package utils
 
 import constants.ResponseMessages._
-import exceptions.{IncorrectCredentialsException, RequestBodyValidationException}
+import exceptions.{DuplicateUserException, IncorrectCredentialsException, RequestBodyValidationException}
 import play.api.libs.json._
 import play.api.mvc.Results._
 import play.api.mvc.{Request, Result}
@@ -22,5 +22,6 @@ object ControllerUtils
 
   def responseErrorHandler: PartialFunction[Throwable, Result] = {
     case IncorrectCredentialsException => Unauthorized(errorResponse(INCORRECT_CREDENTIALS))
+    case DuplicateUserException(email) => Conflict(errorResponse(s"User with email: $email already exists"))
   }
 }

@@ -1,7 +1,7 @@
 package dao
 
 import controllers.requests.bodies.CreateUser
-import exceptions.IncorrectCredentialsException
+import exceptions.DuplicateUserException
 import models.User
 import org.joda.time.DateTime
 import services.HashingService
@@ -15,15 +15,13 @@ trait UserDAO
 
   def insert(user: User): Future[Int]
 
+  def exists(email: String): Future[Boolean]
+
   def fetchByEmail(email: String): FutureO[User]
 
-//  def verifyUser(email: String, password: String)(implicit executionContext: ExecutionContext): FutureO[User] = for {
-//    user <- fetchByEmail(email)
-//    success <- hashingService.checkPassword(user.saltedPasswordHash, password)
-//    _ <- ScalaUtils.predicate(success, IncorrectCredentialsException)
-//  } yield user
-
   def insert(createUser: CreateUser)(implicit executionContext: ExecutionContext): Future[User] = for {
+    userExists <- exists(createUser.email)
+    _ <- ScalaUtils.predicate(!userExists, DuplicateUserException(createUser.email))
     newUser <- user(createUser)
     result <- insert(newUser) if result == 1
   } yield newUser
