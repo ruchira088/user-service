@@ -3,7 +3,7 @@ package utils
 import exceptions.{EmptyOptionException, FailedPredicateException}
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.Try
+import scala.util.{Success, Try}
 
 case class FutureO[A](future: Future[Option[A]])
 {
@@ -26,6 +26,11 @@ case class FutureO[A](future: Future[Option[A]])
       else
         FutureO(Future.failed(FailedPredicateException))
     )
+
+  def flatten(implicit executionContext: ExecutionContext): Future[A] = future.flatMap {
+    case Some(value) => Future.successful(value)
+    case None => Future.failed(EmptyOptionException)
+  }
 }
 
 object FutureO

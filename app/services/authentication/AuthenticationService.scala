@@ -20,7 +20,7 @@ class AuthenticationService @Inject()(userDAO: UserDAO, cachingService: CachingS
     user <- userDAO.fetchByEmail(email)
     success <- hashingService.checkPassword(user.saltedPasswordHash, password)
     _ <- ScalaUtils.predicate(success, IncorrectCredentialsException)
-    authToken = AuthToken(randomUUID(), DateTime.now(), user)
+    authToken = AuthToken(randomUUID(), DateTime.now(), user.sanitize)
     _ <- cachingService.set(authToken.bearerToken, authToken)
   } yield authToken
 }

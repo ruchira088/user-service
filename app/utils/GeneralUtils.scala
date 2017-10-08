@@ -16,15 +16,4 @@ object GeneralUtils
     } catch {
       case NonFatal(throwable) => Failure(throwable)
     }
-
-  def serializeObject[A](obj: A): List[Byte] =
-  {
-    val byteArrayStream = new ByteArrayOutputStream()
-    val objectOutputStream = new ObjectOutputStream(byteArrayStream)
-
-    objectOutputStream.writeObject(obj)
-    objectOutputStream.close()
-
-    byteArrayStream.toByteArray.toList
-  }
 }
