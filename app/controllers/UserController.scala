@@ -28,7 +28,7 @@ class UserController @Inject()(
         user <- userDAO.insert(createUser)
       } yield Ok(user.sanitize.toJson)
     }
-        .recover(responseErrorHandler)
+      .recover(responseErrorHandler)
   }
 
   def login() = Action.async(bodyParser.json) {
