@@ -5,6 +5,8 @@ jobs:
   build:
     docker:
       - image: openjdk:8-jdk
+        environment:
+
       - image: mongo
       - image: redis
 
