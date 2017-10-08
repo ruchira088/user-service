@@ -13,9 +13,9 @@ object ScalaUtils
     case Failure(throwable) => JsError(throwable.getMessage)
   }
 
-  def fromOption[A](option: Option[A]): Try[A] = option match {
+  def fromOption[A](option: Option[A], exception: => Exception = EmptyOptionException): Try[A] = option match {
     case Some(value) => Success(value)
-    case None => Failure(EmptyOptionException)
+    case None => Failure(exception)
   }
 
   def toOption[A](value: A): Option[A] = value match {

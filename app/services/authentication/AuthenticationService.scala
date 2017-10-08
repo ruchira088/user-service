@@ -24,4 +24,7 @@ class AuthenticationService @Inject()(userDAO: UserDAO, cachingService: CachingS
     authToken = AuthToken(randomUUID(), DateTime.now(), user.sanitize)
     _ <- cachingService.set(authToken.bearerToken, authToken)
   } yield authToken
+
+  def getAuthToken(bearerToken: String): FutureO[AuthToken] =
+    cachingService.get[AuthToken](bearerToken)
 }
