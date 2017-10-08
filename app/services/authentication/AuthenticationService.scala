@@ -18,7 +18,8 @@ class AuthenticationService @Inject()(userDAO: UserDAO, cachingService: CachingS
 {
   def authenticate(email: String, password: String): FutureO[AuthToken] = for {
     user <- userDAO.fetchByEmail(email)
-    success <- hashingService.checkPassword(user.saltedPasswordHash, password)
+    saltedPasswordHash <- fromTry(ScalaUtils.fromOption(user.saltedPasswordHash))
+    success <- hashingService.checkPassword(saltedPasswordHash, password)
     _ <- ScalaUtils.predicate(success, IncorrectCredentialsException)
     authToken = AuthToken(randomUUID(), DateTime.now(), user.sanitize)
     _ <- cachingService.set(authToken.bearerToken, authToken)

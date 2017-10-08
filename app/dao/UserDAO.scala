@@ -32,5 +32,5 @@ trait UserDAO
     saltedPasswordHash <- hashingService.hash(createUser.password)
     CreateUser(email, _, firstName, lastName) = createUser
     userId = GeneralUtils.randomUUID()
-  } yield User(userId, DateTime.now(), email, saltedPasswordHash, firstName, lastName)
+  } yield User(userId, DateTime.now(), email, Some(saltedPasswordHash), firstName, lastName)
 }

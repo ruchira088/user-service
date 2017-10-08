@@ -6,7 +6,7 @@ import controllers.requests.bodies.{CreateUser, LoginUser}
 import dao.UserDAO
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc._
-import services.authentication.AuthenticationService
+import services.authentication.{AuthToken, AuthenticationService}
 import utils.ControllerUtils._
 import utils.FutureO
 
@@ -34,8 +34,8 @@ class UserController @Inject()(
     implicit request: Request[JsValue] => {
       for {
         LoginUser(email, password) <- FutureO.fromTry(deserialize[LoginUser])
-        authToken <- authenticationService.authenticate(email, password)
-      } yield Ok(Json.toJson(authToken))
+        AuthToken(bearerToken, _, _) <- authenticationService.authenticate(email, password)
+      } yield Ok(Json.obj("bearerToken" -> bearerToken))
     }
       .flatten
       .recover(responseErrorHandler)
