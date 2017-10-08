@@ -4,7 +4,7 @@ import javax.inject.Inject
 
 import com.google.common.net.HttpHeaders
 import controllers.requests.AuthenticatedRequest
-import exceptions.{AuthorizationHeaderNotFoundException, InvalidAuthHeaderFormatException}
+import exceptions.{AuthorizationHeaderNotFoundException, IncorrectAuthToken, InvalidAuthHeaderFormatException}
 import org.apache.commons.lang3.StringUtils
 import play.api.mvc.{ActionBuilderImpl, BodyParsers, Request, Result}
 import services.authentication.AuthenticationService
@@ -23,12 +23,11 @@ class AuthenticatedAction @Inject()(
 {
   override def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]): Future[Result] = {
     for {
-      bearerToken <- FutureO.fromTry(AuthenticatedAction.getBearerToken(request))
-      authToken <- authenticationService.getAuthToken(bearerToken)
+      bearerToken <- Future.fromTry(AuthenticatedAction.getBearerToken(request))
+      authToken <- authenticationService.getAuthToken(bearerToken).flatten(IncorrectAuthToken)
       result <- block(AuthenticatedRequest(authToken.user, request))
     } yield result
   }
-      .flatten
       .recover(responseErrorHandler)
 }
 

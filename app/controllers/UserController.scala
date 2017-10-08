@@ -8,9 +8,9 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.mvc._
 import services.authentication.{AuthToken, AuthenticationService}
 import utils.ControllerUtils._
-import utils.FutureO
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future._
 
 @Singleton
 class UserController @Inject()(
@@ -24,7 +24,7 @@ class UserController @Inject()(
   def create(): Action[JsValue] = Action.async(bodyParser.json) {
     implicit request: Request[JsValue] => {
       for {
-        createUser <- Future.fromTry(deserialize[CreateUser])
+        createUser <- fromTry(deserialize[CreateUser])
         user <- userDAO.insert(createUser)
       } yield Ok(user.sanitize.toJson)
     }
@@ -33,11 +33,10 @@ class UserController @Inject()(
   def login() = Action.async(bodyParser.json) {
     implicit request: Request[JsValue] => {
       for {
-        LoginUser(email, password) <- FutureO.fromTry(deserialize[LoginUser])
+        LoginUser(email, password) <- fromTry(deserialize[LoginUser])
         AuthToken(bearerToken, _, _) <- authenticationService.authenticate(email, password)
       } yield Ok(Json.obj("bearerToken" -> bearerToken))
     }
-      .flatten
       .recover(responseErrorHandler)
   }
 
